@@ -1,0 +1,2 @@
+### Building tests for bin/main.bin START ###
+gcc -O0 -Wpedantic -g -Wall -std=c99 -g3 -D_FORTIFY_SOURCE=2 -DOS_Linux  -Ilibs/include/ -Llibs/static/ -o bin/main.bin src/main.c -l:libcimgui_static.a -l:libglfw3.a -lm -ldl -lpthread -lX11 -lxcb -lGL -lGLX -lXext -lGLdispatch -lXau -lXdmcp
