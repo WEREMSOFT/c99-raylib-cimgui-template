@@ -15,47 +15,51 @@ int main(void){
     printf("MacOS dettected\n");
     #endif
 
+    // cimgui variables
     struct ImGuiContext* ctx;
     struct ImGuiIO* io;
+    ImDrawData* draw_data;
 
+    // Init Raylib
     InitWindow(WIDTH, HEIGHT, "This is a imgui test");
     SetTargetFPS(60);
 
+    // Setup cimgui
     ctx = igCreateContext(NULL);
     io = igGetIO();
-
     igStyleColorsDark(NULL);
-
     ImGui_ImplRaylib_Init();
     unsigned char *text_pixels = NULL;
     int text_w, text_h;
     ImFontAtlas_GetTexDataAsRGBA32(io->Fonts, &text_pixels, &text_w, &text_h, NULL);
 
+    // Setup Camera
     Camera3D camera = {0};
-
     camera.fovy = 45.0f;
     camera.target = (Vector3) {.0f, .0f, .0f};
     camera.position = (Vector3) { 0.0f, 10.0f, 10.0f };
     camera.up = (Vector3) { 0.0f, 1.0f, 0.0f };
     camera.type = CAMERA_PERSPECTIVE;
     
+    // This is just to have something to play with.
     Vector3 cube_position = {0.0f, 0.0f, 0.0f};
 
-    ImDrawData* draw_data;
-
+    // Main loop
     while(!WindowShouldClose()){
 
+        // This code I copied from some place. Not sure what is it.
         ImVec2 display_size;
         display_size.x = WIDTH;
         display_size.y = HEIGHT;
         io->DisplaySize = display_size;
         io->DeltaTime = 1.0f / 60.0f;
 
+        // Frame preparation for imgui
         ImGui_ImplRaylib_NewFrame();
         igNewFrame();
         ImGui_ImplRaylib_ProcessEvent();
 
-
+        // Start drawing on raylib
         BeginDrawing();
         {
             ClearBackground(WHITE);
@@ -76,9 +80,11 @@ int main(void){
             if(IsKeyPressed(KEY_UP)) cube_position.z -= 1.0f;
             if(IsKeyPressed(KEY_DOWN)) cube_position.z += 1.0f;
 
+            // cimgui end frame
             igShowDemoWindow(false);
             igRender();
-            draw_data = igGetDrawData();
+            // This variable is only to debug what igGetDrawData returns.
+            draw_data = igGetDrawData(); 
         } EndDrawing();
     }
 
