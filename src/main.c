@@ -3,8 +3,8 @@
 #include <rlgl.h>
 #include "cimgui_raylib.h"
 
-#define WIDTH 2560
-#define HEIGHT 1440
+#define WIDTH 800
+#define HEIGHT 600
 
 void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *idx_vert)
 {
@@ -29,17 +29,17 @@ void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *
         c = (Color *)&idx_vert[i].col;
         // printf("%x\n", c);
         rlColor4ub(0xff, 0, 0xff, 0x77);
-        // rlColor4ub(c->a, c->b, c->b, c->a);
+        rlColor4ub(c->a, c->b, c->b, c->a);
         rlTexCoord2f(idx_vert[i].uv.x, idx_vert[i].uv.y);
         rlVertex2f(idx_vert[i].pos.x, idx_vert[i].pos.y);
 
         c = (Color *)&idx_vert[i + 1].col;
-        // rlColor4ub(c->a, c->b, c->b, c->a);
+        rlColor4ub(c->a, c->b, c->b, c->a);
         rlTexCoord2f(idx_vert[i + 1].uv.x, idx_vert[i + 1].uv.y);
         rlVertex2f(idx_vert[i + 1].pos.x, idx_vert[i + 1].pos.y);
 
         c = (Color *)&idx_vert[i + 2].col;
-        // rlColor4ub(c->a, c->b, c->b, c->a);
+        rlColor4ub(c->a, c->b, c->b, c->a);
         rlTexCoord2f(idx_vert[i + 2].uv.x, idx_vert[i + 2].uv.y);
         rlVertex2f(idx_vert[i + 2].pos.x, idx_vert[i + 2].pos.y);
         // Since we can not draw textured triangles with rlgl, we draw a textured quadn with the 
