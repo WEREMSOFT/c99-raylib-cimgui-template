@@ -3,10 +3,19 @@
 #include <rlgl.h>
 #include "cimgui_raylib.h"
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1024
+#define HEIGHT 768
 
-void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *idx_vert)
+void draw_triangle(ImDrawVert idx_vert)
+{
+    Color *c;
+    c = (Color *)&idx_vert.col;
+    rlColor4ub(c->r, c->g, c->b, c->a);
+    rlTexCoord2f(idx_vert.uv.x, idx_vert.uv.y);
+    rlVertex2f(idx_vert.pos.x, idx_vert.pos.y);
+}
+// NOT USING idx_buffer?!!?!?!?
+void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *idx_vert, unsigned int texture_id)
 {
     // DEbug triangle (this shows us that we can draw a triangle)
     rlPushMatrix();
@@ -22,30 +31,16 @@ void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *
     rlPushMatrix();
     for (int i = 0; i < count; i += 3)
     {
+        rlEnableTexture(texture_id);
         rlBegin(RL_QUADS);
 
-        Color *c;
-
-        c = (Color *)&idx_vert[i].col;
-        // printf("%x\n", c);
-        rlColor4ub(0xff, 0, 0xff, 0x77);
-        rlColor4ub(c->a, c->b, c->b, c->a);
-        rlTexCoord2f(idx_vert[i].uv.x, idx_vert[i].uv.y);
-        rlVertex2f(idx_vert[i].pos.x, idx_vert[i].pos.y);
-
-        c = (Color *)&idx_vert[i + 1].col;
-        rlColor4ub(c->a, c->b, c->b, c->a);
-        rlTexCoord2f(idx_vert[i + 1].uv.x, idx_vert[i + 1].uv.y);
-        rlVertex2f(idx_vert[i + 1].pos.x, idx_vert[i + 1].pos.y);
-
-        c = (Color *)&idx_vert[i + 2].col;
-        rlColor4ub(c->a, c->b, c->b, c->a);
-        rlTexCoord2f(idx_vert[i + 2].uv.x, idx_vert[i + 2].uv.y);
-        rlVertex2f(idx_vert[i + 2].pos.x, idx_vert[i + 2].pos.y);
-        // Since we can not draw textured triangles with rlgl, we draw a textured quadn with the 
-        // last 2 points overlapping.
-        rlVertex2f(idx_vert[i + 2].pos.x, idx_vert[i + 2].pos.y);
+        draw_triangle(idx_vert[i]);
+        draw_triangle(idx_vert[i+1]);
+        draw_triangle(idx_vert[i+2]);
+        draw_triangle(idx_vert[i+2]);
+        
         rlEnd();
+        rlDisableTexture();
     }
     rlPopMatrix();
 }
@@ -85,8 +80,7 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                 // MyEngineScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
                 // Render 'pcmd->ElemCount/3' indexed triangles.
                 // By default the indices ImDrawIdx are 16-bit, you can change them to 32-bit in imconfig.h if your engine doesn't support 16-bit indices.
-                rlEnableTexture(pcmd->TextureId);
-                raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer);
+                raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, pcmd->TextureId);
                 rlDisableTexture();
             }
             idx_buffer += pcmd->ElemCount;
@@ -126,8 +120,8 @@ int main(void)
     io = igGetIO();
     unsigned char *pixels = NULL;
 
-    int width = WIDTH;
-    int height = HEIGHT;
+    int width = WIDTH/2;
+    int height = HEIGHT/2;
     ImFontAtlas_GetTexDataAsRGBA32(io->Fonts, &pixels, &width, &height, NULL);
     // At this point you've got the texture data and you need to upload that your your graphic system:
     // After we have created the texture, store its pointer/identifier (_in whichever format your engine uses_) in 'io.Fonts->TexID'.
@@ -182,7 +176,7 @@ int main(void)
                 DrawGrid(10, 1);
             }
             EndMode3D();
-            
+
             igShowDemoWindow(NULL);
             igRender();
             draw_data = igGetDrawData();
