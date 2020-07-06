@@ -27,7 +27,7 @@ ASM_D := asm/
 
 INCLUDE_D := -I$(LIBS_D)include/
 STATIC_LIBS_D := -L$(LIBS_D)static/
-CFLAGS := -O0 -Wpedantic -g -Wall -std=c99 -g3 -D_FORTIFY_SOURCE=2 -DOS_$(DETTECTED_OS) 
+CFLAGS := -O0 -Wpedantic -g -Wall -std=c11 -g3 -D_FORTIFY_SOURCE=2 -DOS_$(DETTECTED_OS) 
 DEBUGGER := kdbg # Other options: cgdb gdb
 MK_DIR:= mkdir -p
 BIN_EXTENSION = bin

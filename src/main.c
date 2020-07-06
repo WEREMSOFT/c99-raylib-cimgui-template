@@ -6,7 +6,7 @@
 #define WIDTH 1024
 #define HEIGHT 768
 
-void draw_triangle(ImDrawVert idx_vert)
+void draw_triangle_vertex(ImDrawVert idx_vert)
 {
     Color *c;
     c = (Color *)&idx_vert.col;
@@ -14,35 +14,37 @@ void draw_triangle(ImDrawVert idx_vert)
     rlTexCoord2f(idx_vert.uv.x, idx_vert.uv.y);
     rlVertex2f(idx_vert.pos.x, idx_vert.pos.y);
 }
-// NOT USING idx_buffer?!!?!?!?
-void raylib_render_draw_triangles(int count, ImDrawIdx *idx_buffer, ImDrawVert *idx_vert, unsigned int texture_id)
-{
-    // DEbug triangle (this shows us that we can draw a triangle)
-    rlPushMatrix();
-    rlBegin(RL_TRIANGLES);
-    rlColor4ub(0xff, 0, 0, 0xff);
-    rlVertex2f(0, 0);
-    rlVertex2f(0, 50);
-    rlVertex2f(50, 50);
-    rlEnd();
-    rlPopMatrix();
 
+void raylib_render_draw_triangles(unsigned int count, const ImDrawIdx *idx_buffer, const ImDrawVert *idx_vert, unsigned int texture_id)
+{
     // Draw the imgui triangle data
     rlPushMatrix();
-    for (int i = 0; i < count; i += 3)
+    for (unsigned int i = 0; i < (count - 3); i += 3)
     {
+        rlBegin(RL_TRIANGLES);
         rlEnableTexture(texture_id);
-        rlBegin(RL_QUADS);
 
-        draw_triangle(idx_vert[i]);
-        draw_triangle(idx_vert[i+1]);
-        draw_triangle(idx_vert[i+2]);
-        draw_triangle(idx_vert[i+2]);
+        ImDrawIdx index;
+        ImDrawVert vertex;
+        // printf("i: %d\nindex %d\ncount: %d\n###\n", i, idx_buffer[i], count);
+        index = idx_buffer[i];
+        vertex = idx_vert[index];
+        draw_triangle_vertex(vertex);
         
-        rlEnd();
+        // printf("i: %d\nindex %d\ncount: %d\n###\n", i, idx_buffer[i+2], count);
+        index = idx_buffer[i+2];
+        vertex = idx_vert[index];
+        draw_triangle_vertex(vertex);
+        
+        // printf("i: %d\nindex %d\ncount: %d\n###\n", i, idx_buffer[i+2], count);
+        index = idx_buffer[i+1];
+        vertex = idx_vert[index];
+        draw_triangle_vertex(vertex);
+        // printf("###############\n");
         rlDisableTexture();
+        rlEnd();
+        rlPopMatrix();
     }
-    rlPopMatrix();
 }
 
 void raylib_render_cimgui(ImDrawData *draw_data)
@@ -80,8 +82,8 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                 // MyEngineScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
                 // Render 'pcmd->ElemCount/3' indexed triangles.
                 // By default the indices ImDrawIdx are 16-bit, you can change them to 32-bit in imconfig.h if your engine doesn't support 16-bit indices.
-                raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, pcmd->TextureId);
-                rlDisableTexture();
+                unsigned int *ti = pcmd->TextureId;
+                raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
             }
             idx_buffer += pcmd->ElemCount;
         }
@@ -103,7 +105,7 @@ int main(void)
     SetTargetFPS(60);
 
     // cimgui variables
-    struct ImGuiContext *ctx;
+    // struct ImGuiContext *ctx;
     struct ImGuiIO *io;
     ImDrawData *draw_data;
 
@@ -120,13 +122,14 @@ int main(void)
     io = igGetIO();
     unsigned char *pixels = NULL;
 
-    int width = WIDTH/2;
-    int height = HEIGHT/2;
+    int width = WIDTH;
+    int height = HEIGHT;
     ImFontAtlas_GetTexDataAsRGBA32(io->Fonts, &pixels, &width, &height, NULL);
     // At this point you've got the texture data and you need to upload that your your graphic system:
     // After we have created the texture, store its pointer/identifier (_in whichever format your engine uses_) in 'io.Fonts->TexID'.
     // This will be passed back to your via the renderer. Basically ImTextureID == void*. Read FAQ for details about ImTextureID.
-    Image image = GenImageColor(WIDTH, HEIGHT, WHITE);
+    // Image image = GenImageColor(WIDTH, HEIGHT, WHITE);
+    Image image = LoadImageEx(pixels, width, height);
     Texture2D texture = LoadTextureFromImage(image); //MyEngine::CreateTextureFromMemoryPixels(pixels, width, height, TEXTURE_TYPE_RGBA32)
     io->Fonts->TexID = (void *)&texture.id;
 
