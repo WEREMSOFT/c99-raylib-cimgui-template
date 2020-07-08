@@ -36,8 +36,8 @@ BIN_EXTENSION = bin
 RAYLIB_PATH := /Users/pabloweremczuk/Documents/Proyectos/c/raylib
 EMSC_CFLAGS := -O2 -s -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -g4 -s USE_GLFW=3 -s TOTAL_MEMORY=67108864 -v -D PLATFORM_WEB
 EMSC_CC := emcc
-EMSC_STATIC_LIBS_D :=
-# EMSC_STATIC_LIBS_D := $(LIBS_D)static/libraylib.bc
+EMSC_STATIC_LIBS_D := $(LIBS_D)static/libraylib.bc $(LIBS_D)static/cimgui.bc 
+#$(LIBS_D)static/imgui_draw.bc $(LIBS_D)static/imgui_widgets.bc
 
 # Call to compilers / linkers
 CC_COMMAND := $(CC) $(CFLAGS) $(INCLUDE_D) $(STATIC_LIBS_D)
@@ -50,7 +50,6 @@ EMSC_CC_COMMAND := $(EMSC_CC) $(EMSC_CFLAGS) $(INCLUDE_D) $(STATIC_LIBS_D)
 ifeq ($(DETTECTED_OS),Linux)
 	LINK_LIBS := -l:libraylib.a -l:libcimgui_static.a -l:libglfw3.a -lstdc++ -lm -ldl -lpthread -lX11 -lxcb -lGL -lGLX -lXext -lGLdispatch -lXau -lXdmcp
 	TEST_LINK_LIBS := -lunity 
-	#LINK_LIBS := -l:libraylib-linux.a -l:libglfw3.a -lm -ldl -lpthread -lX11 -lxcb -lGL -lGLX -lXext -lGLdispatch -lXau -lXdmcp
 else ifeq ($(DETTECTED_OS),Darwin)
 	LINK_LIBS := 
 	#LINK_LIBS := -O0 -framework IOKit -v -lraylib -framework OpenGL -framework cocoa 

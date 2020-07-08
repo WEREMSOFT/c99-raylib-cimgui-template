@@ -21,6 +21,7 @@ static void ImGui_ImplRaylib_SetClipboardText(void* _, const char* text)
 
 bool ImGui_ImplRaylib_Init()
 {
+    rlEnableScissorTest(); 
     struct ImGuiIO* io = igGetIO();
 
     io->BackendPlatformName = "imgui_impl_raylib";

@@ -1,10 +1,19 @@
 #include <stdio.h>
 #include <raylib.h>
 #include <rlgl.h>
-#include "cimgui_raylib.h"
 
+#ifdef PLATFORM_WEB
+#include <emscripten/emscripten.h>
+#endif
+
+#include "cimgui_raylib.h"
 #define WIDTH 1024
 #define HEIGHT 768
+
+Camera3D camera = {0};
+ImDrawData *draw_data;
+// This is just to have something to play with.
+Vector3 cube_position = {0.0f, 0.0f, 0.0f};
 
 void draw_triangle_vertex(ImDrawVert idx_vert)
 {
@@ -30,14 +39,14 @@ void raylib_render_draw_triangles(unsigned int count, const ImDrawIdx *idx_buffe
         index = idx_buffer[i];
         vertex = idx_vert[index];
         draw_triangle_vertex(vertex);
-        
+
         // printf("i: %d\nindex %d\ncount: %d\n###\n", i, idx_buffer[i+2], count);
-        index = idx_buffer[i+2];
+        index = idx_buffer[i + 2];
         vertex = idx_vert[index];
         draw_triangle_vertex(vertex);
-        
+
         // printf("i: %d\nindex %d\ncount: %d\n###\n", i, idx_buffer[i+2], count);
-        index = idx_buffer[i+1];
+        index = idx_buffer[i + 1];
         vertex = idx_vert[index];
         draw_triangle_vertex(vertex);
         // printf("###############\n");
@@ -82,12 +91,57 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                 // MyEngineScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
                 // Render 'pcmd->ElemCount/3' indexed triangles.
                 // By default the indices ImDrawIdx are 16-bit, you can change them to 32-bit in imconfig.h if your engine doesn't support 16-bit indices.
+                ImVec2 pos = draw_data->DisplayPos;
+                rlScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
                 unsigned int *ti = pcmd->TextureId;
                 raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
             }
             idx_buffer += pcmd->ElemCount;
         }
     }
+}
+
+void update_frame()
+{
+
+    if (IsKeyDown(KEY_KP_ADD))
+        camera.fovy += 1.0f;
+    if (IsKeyDown(KEY_KP_SUBTRACT))
+        camera.fovy -= 1.0f;
+
+    if (IsKeyPressed(KEY_LEFT))
+        cube_position.x -= 1.0f;
+    if (IsKeyPressed(KEY_RIGHT))
+        cube_position.x += 1.0f;
+    if (IsKeyPressed(KEY_UP))
+        cube_position.z -= 1.0f;
+    if (IsKeyPressed(KEY_DOWN))
+        cube_position.z += 1.0f;
+
+    UpdateCamera(&camera);
+    ImGui_ImplRaylib_NewFrame();
+    igNewFrame();
+    ImGui_ImplRaylib_ProcessEvent();
+
+    BeginDrawing();
+    {
+        ClearBackground(WHITE);
+        DrawFPS(10, 10);
+
+        BeginMode3D(camera);
+        {
+            DrawCube(cube_position, 1, 1, 1, RED);
+            DrawCubeWires(cube_position, 1, 1, 1, BLUE);
+            DrawGrid(10, 1);
+        }
+        EndMode3D();
+
+        igShowDemoWindow(NULL);
+        igRender();
+        draw_data = igGetDrawData();
+        raylib_render_cimgui(draw_data);
+    }
+    EndDrawing();
 }
 
 int main(void)
@@ -105,9 +159,8 @@ int main(void)
     SetTargetFPS(60);
 
     // cimgui variables
-    // struct ImGuiContext *ctx;
+    struct ImGuiContext *ctx;
     struct ImGuiIO *io;
-    ImDrawData *draw_data;
 
     // Initialize imgui
     igCreateContext(NULL);
@@ -128,13 +181,11 @@ int main(void)
     // At this point you've got the texture data and you need to upload that your your graphic system:
     // After we have created the texture, store its pointer/identifier (_in whichever format your engine uses_) in 'io.Fonts->TexID'.
     // This will be passed back to your via the renderer. Basically ImTextureID == void*. Read FAQ for details about ImTextureID.
-    // Image image = GenImageColor(WIDTH, HEIGHT, WHITE);
     Image image = LoadImageEx(pixels, width, height);
     Texture2D texture = LoadTextureFromImage(image); //MyEngine::CreateTextureFromMemoryPixels(pixels, width, height, TEXTURE_TYPE_RGBA32)
     io->Fonts->TexID = (void *)&texture.id;
 
     // Setup Camera
-    Camera3D camera = {0};
     camera.fovy = 45.0f;
     camera.target = (Vector3){.0f, .0f, .0f};
     camera.position = (Vector3){0.0f, 10.0f, 10.0f};
@@ -142,51 +193,16 @@ int main(void)
     camera.type = CAMERA_PERSPECTIVE;
     SetCameraMode(camera, CAMERA_ORBITAL);
 
-    // This is just to have something to play with.
-    Vector3 cube_position = {0.0f, 0.0f, 0.0f};
-
     // Main loop
+
+#ifdef PLATFORM_WEB
+    emscripten_set_main_loop(update_frame, 0, 1);
+#else
     while (!WindowShouldClose())
     {
-        if (IsKeyDown(KEY_KP_ADD))
-            camera.fovy += 1.0f;
-        if (IsKeyDown(KEY_KP_SUBTRACT))
-            camera.fovy -= 1.0f;
-
-        if (IsKeyPressed(KEY_LEFT))
-            cube_position.x -= 1.0f;
-        if (IsKeyPressed(KEY_RIGHT))
-            cube_position.x += 1.0f;
-        if (IsKeyPressed(KEY_UP))
-            cube_position.z -= 1.0f;
-        if (IsKeyPressed(KEY_DOWN))
-            cube_position.z += 1.0f;
-
-        UpdateCamera(&camera);
-        ImGui_ImplRaylib_NewFrame();
-        igNewFrame();
-        ImGui_ImplRaylib_ProcessEvent();
-
-        BeginDrawing();
-        {
-            ClearBackground(WHITE);
-            DrawFPS(10, 10);
-
-            BeginMode3D(camera);
-            {
-                DrawCube(cube_position, 1, 1, 1, RED);
-                DrawCubeWires(cube_position, 1, 1, 1, BLUE);
-                DrawGrid(10, 1);
-            }
-            EndMode3D();
-
-            igShowDemoWindow(NULL);
-            igRender();
-            draw_data = igGetDrawData();
-            raylib_render_cimgui(draw_data);
-        }
-        EndDrawing();
+        update_frame();
     }
+#endif
     CloseWindow();
 
     return 0;
