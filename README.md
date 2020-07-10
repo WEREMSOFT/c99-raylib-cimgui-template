@@ -9,14 +9,14 @@ Integrate raylib with imgui can be tricky, since raylib is made in C and Dear Im
 One of the most amazing features of [Raylib](https://www.raylib.com/), besides the ease of use and its numerous ports to several languages, is the ability to compile to [WebAssembly](https://webassembly.org/), allowing to show your games arround the world with just a link.
 
 ## Known Bugs
-I think it's fair to let you know the problems early. So here it goes: The scisors function from raylib is not working properly or I don't understand it well(I'll bet for the second). Sill, you can see some artifacts where widgets are renderer where they shouldn't be. PR will be apreciated in this matters.
+I think it's fair to let you know the problems early. So here it goes: The scisors function from raylib is not working properly or I don't understand it well(I'll bet for the second). Because of that, you can see some artifacts where widgets are renderer where they shouldn't be. PR will be apreciated in this matters.
 
 ## Licensing
 Take this code and do whatever you want, I'm not responsable for any damage or problem this software have or create. This is not intended to be a comercial product.
 
 ## Examples
 
-This CMake-based project is an example of how to use the library on a 2D setting.
+This Make-based project is an example of how to use the library on a 2D setting.
 
 ### Example
 [Example](https://htmlpreview.github.io/?https://github.com/WEREMSOFT/c99-raylib-cimgui-template/blob/master/html/main.html)
