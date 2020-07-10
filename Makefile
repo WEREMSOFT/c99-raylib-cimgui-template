@@ -22,7 +22,7 @@ ASST_D := assets/
 TEST_SRC_D := tests/
 TEST_BLD_D := $(TEST_SRC_D)bin/
 LIBS_D := libs/
-HTML_D :=
+HTML_D := html/
 ASM_D := asm/
 
 INCLUDE_D := -I$(LIBS_D)include/
