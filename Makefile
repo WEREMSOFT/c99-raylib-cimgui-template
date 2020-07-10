@@ -59,7 +59,7 @@ endif
 # Build Targets
 #//////////////
 
-.PHONY: test run_% debug_optimized debug_unoptimized print_information create_folder_structure run_html_u run_html_o run_performance_test init_project
+.PHONY: web test run_% debug_optimized debug_unoptimized print_information create_folder_structure run_html_u run_html_o run_performance_test init_project
 
 all: print_information $(BLD_D)main.$(BIN_EXTENSION)
 
@@ -77,6 +77,8 @@ $(BLD_D)%.$(BIN_EXTENSION): $(SRC_D)%.c
 	$(CC_COMMAND) -o $@ $^ $(LINK_LIBS)
 	@echo "### End ###"
 	@echo ""
+
+web: $(HTML_D)main.html
 
 $(HTML_D)%.html: $(SRC_D)%.c
 	$(EMSC_CC_COMMAND) -o $@ $^ $(EMSC_STATIC_LIBS_D)
