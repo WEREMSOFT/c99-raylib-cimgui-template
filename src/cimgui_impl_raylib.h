@@ -261,9 +261,9 @@ void draw_triangle_vertex(ImDrawVert idx_vert)
 void raylib_render_draw_triangles(unsigned int count, const ImDrawIdx *idx_buffer, const ImDrawVert *idx_vert, unsigned int texture_id)
 {
     // Draw the imgui triangle data
-    rlPushMatrix();
     for (unsigned int i = 0; i < (count - 3); i += 3)
     {
+        rlPushMatrix();
         rlBegin(RL_TRIANGLES);
         rlEnableTexture(texture_id);
 
@@ -307,6 +307,7 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                 rlScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
                 unsigned int *ti = pcmd->TextureId;
                 raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
+                rlglDraw();
             }
             rlScissor(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);
             idx_buffer += pcmd->ElemCount;
