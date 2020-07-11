@@ -2,7 +2,7 @@
 
 <img align="left" src="./assets/raylib_logo.png" width="256">
 
-The spine-raylib runtime provides functionality to integrate [Dear ImGui](https://github.com/ocornut/imgui) using [Raylib](https://www.raylib.com/). cimgui-raylib is based on (cimgui)[https://github.com/cimgui/cimgui].
+The cimgui-raylib runtime provides functionality to integrate [Dear ImGui](https://github.com/ocornut/imgui) using [Raylib](https://www.raylib.com/). cimgui-raylib is based on (cimgui)[https://github.com/cimgui/cimgui].
 
 Integrate raylib with imgui can be tricky, since raylib is made in C and Dear Imgui is made in C++, you have two options: or you use the C++ bindings for Raylib, or you use the C bindings for raylib. This repo uses the second aproach, creating an imgui implementation file for rlgl, raylib's openGL abstraction layer. Since this aproach proved to be much slower than the native openGL implementations from imgui, I prioritized portability and ease of use.
 
