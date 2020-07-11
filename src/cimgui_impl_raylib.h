@@ -304,10 +304,16 @@ void raylib_render_cimgui(ImDrawData *draw_data)
             else
             {
                 ImVec2 pos = draw_data->DisplayPos;
-                rlScissor((int)(pcmd->ClipRect.x - pos.x), (int)(pcmd->ClipRect.y - pos.y), (int)(pcmd->ClipRect.z - pos.x), (int)(pcmd->ClipRect.w - pos.y));
-                unsigned int *ti = pcmd->TextureId;
-                raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
-                rlglDraw();
+                int rectX = (int)(pcmd->ClipRect.x - pos.x);
+                int rectY = (int)(pcmd->ClipRect.y - pos.y);
+                int rectW = (int)(pcmd->ClipRect.z - rectX);
+                int rectH = (int)(pcmd->ClipRect.w - rectY);
+                BeginScissorMode(rectX, rectY, rectW, rectH);
+                {
+                    unsigned int *ti = pcmd->TextureId;
+                    raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
+                }
+                EndScissorMode();
             }
             rlScissor(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);
             idx_buffer += pcmd->ElemCount;

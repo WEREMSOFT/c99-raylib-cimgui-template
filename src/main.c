@@ -49,7 +49,6 @@ void update_frame()
             DrawGrid(10, 1);
         }
         EndMode3D();
-
         igShowDemoWindow(NULL);
         igRender();
         draw_data = igGetDrawData();
