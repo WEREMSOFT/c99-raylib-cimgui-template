@@ -509,6 +509,7 @@ typedef enum {
     KEY_NINE            = 57,
     KEY_SEMICOLON       = 59,
     KEY_EQUAL           = 61,
+    KEY_QUESTION        = 63,
     KEY_A               = 65,
     KEY_B               = 66,
     KEY_C               = 67,
