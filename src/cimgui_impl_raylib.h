@@ -313,11 +313,11 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                     unsigned int *ti = pcmd->TextureId;
                     raylib_render_draw_triangles(pcmd->ElemCount, idx_buffer, vtx_buffer, *ti);
                 }
-                EndScissorMode();
             }
             idx_buffer += pcmd->ElemCount;
         }
     }
+    EndScissorMode();
 }
 
 #endif
