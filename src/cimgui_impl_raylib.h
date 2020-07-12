@@ -315,7 +315,6 @@ void raylib_render_cimgui(ImDrawData *draw_data)
                 }
                 EndScissorMode();
             }
-            rlScissor(0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y);
             idx_buffer += pcmd->ElemCount;
         }
     }
