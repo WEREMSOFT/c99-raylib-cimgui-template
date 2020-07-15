@@ -52,16 +52,6 @@ void update_frame()
         }
         EndMode3D();
         igShowDemoWindow(NULL);
-
-        // igBegin("Mouse Touch position", true, 0);
-        // igSeparator();
-        // igText("Mouse Position: %d - %d.\n", GetMouseX(), GetMouseY());
-        // igSeparator();
-        // igText("Touch Position: %d - %d.\n", GetTouchX(), GetTouchY());
-        // igSeparator();
-        // igButton("Press me", (ImVec2){100, 30});
-        // igEnd();
-
         igRender();
         draw_data = igGetDrawData();
         raylib_render_cimgui(draw_data);
