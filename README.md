@@ -12,7 +12,6 @@ One of the most amazing features of [Raylib](https://www.raylib.com/), besides t
 I think it's fair to let you know the problems early. So, here we go:
 
 * Mouse cursor is not shown in web fullscreen. 
-* Touch events are not working on web for some reason.
 I'm working on this.
 
 
