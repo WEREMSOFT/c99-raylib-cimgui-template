@@ -13,8 +13,8 @@ I think it's fair to let you know the problems early. So, here we go:
 
 * Mouse cursor is not shown in web fullscreen. 
 * Touch events are not working on web for some reason.
-
 I'm working on this.
+
 
 ## Licensing
 Take this code and do whatever you want, I'm not responsable for any damage or problem this software have or create. This is not intended to be a comercial product.

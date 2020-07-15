@@ -83,6 +83,8 @@ static void ImGui_ImplRaylib_UpdateMouseCursor()
 
 static void ImGui_ImplRaylib_UpdateMousePosAndButtons()
 {
+    static int oldTouchX = 0;
+    static int oldTouchY = 0;
     struct ImGuiIO* io = igGetIO();
 
     // Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
@@ -91,12 +93,16 @@ static void ImGui_ImplRaylib_UpdateMousePosAndButtons()
     else
         io->MousePos = (ImVec2){-FLT_MAX, -FLT_MAX};
 
-    io->MouseDown[0] = IsMouseButtonDown(MOUSE_LEFT_BUTTON);
+    io->MouseDown[0] = IsMouseButtonDown(MOUSE_LEFT_BUTTON) || oldTouchX != GetTouchX() || oldTouchY != GetTouchY();
     io->MouseDown[1] = IsMouseButtonDown(MOUSE_RIGHT_BUTTON);
     io->MouseDown[2] = IsMouseButtonDown(MOUSE_MIDDLE_BUTTON);
 
-    if (!IsWindowMinimized())
-        io->MousePos = (ImVec2){GetMouseX(), GetMouseY()};
+    if (!IsWindowMinimized()){
+        io->MousePos = (ImVec2){GetTouchX(), GetTouchY()};
+    }
+
+    oldTouchX = GetTouchX();
+    oldTouchY = GetTouchY();
 }
 
 void ImGui_ImplRaylib_NewFrame()
