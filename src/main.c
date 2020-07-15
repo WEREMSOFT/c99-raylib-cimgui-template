@@ -15,6 +15,8 @@ ImDrawData *draw_data;
 // This is just to have something to play with.
 Vector3 cube_position = {0.0f, 0.0f, 0.0f};
 
+
+
 void update_frame()
 {
 
@@ -49,7 +51,17 @@ void update_frame()
             DrawGrid(10, 1);
         }
         EndMode3D();
-        igShowDemoWindow(NULL);
+        // igShowDemoWindow(NULL);
+
+        igBegin("Mouse Touch position", true, 0);
+        igSeparator();
+        igText("Mouse Position: %d - %d.\n", GetMouseX(), GetMouseY());
+        igSeparator();
+        igText("Touch Position: %d - %d.\n", GetTouchX(), GetTouchY());
+        igSeparator();
+        igButton("Press me", (ImVec2){100, 30});
+        igEnd();
+
         igRender();
         draw_data = igGetDrawData();
         raylib_render_cimgui(draw_data);
