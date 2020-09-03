@@ -55,7 +55,7 @@ else ifeq ($(DETTECTED_OS),Darwin)
 	#LINK_LIBS := -O0 -framework IOKit -v -lraylib -framework OpenGL -framework cocoa 
 endif
 
-#//////////////
+#//////////////	
 # Build Targets
 #//////////////
 
