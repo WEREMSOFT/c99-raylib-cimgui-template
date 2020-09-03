@@ -79,6 +79,7 @@ $(BLD_D)%.$(BIN_EXTENSION): $(SRC_D)%.c
 	@echo ""
 
 web: $(HTML_D)main.html
+	mv $(HTML_D)main.html $(HTML_D)index.html
 
 $(HTML_D)%.html: $(SRC_D)%.c
 	$(EMSC_CC_COMMAND) -o $@ $^ $(EMSC_STATIC_LIBS_D)
