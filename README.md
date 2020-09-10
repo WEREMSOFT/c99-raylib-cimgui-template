@@ -23,7 +23,7 @@ Take this code and do whatever you want, I'm not responsable for any damage or p
 This Make-based project is an example of how to use the library on a 2D setting.
 
 ### Example
-[Example](https://htmlpreview.github.io/?https://github.com/WEREMSOFT/c99-raylib-cimgui-template/blob/master/html/main.html)
+[Example](https://weremsoft.github.io/c99-raylib-cimgui-template/)
 
 <img src="./doc_images/example.png" width="300">
 
