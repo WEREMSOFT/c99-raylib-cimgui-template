@@ -82,6 +82,7 @@ $(BLD_D)%.$(BIN_EXTENSION): $(SRC_D)%.c
 
 web: $(HTML_D)main.html
 	mv $(HTML_D)main.html $(HTML_D)index.html
+	cp -r src $(HTML_D)
 
 $(HTML_D)%.html: $(SRC_D)%.c
 	$(EMSC_CC_COMMAND) -g4 --source-map-base https://weremsoft.github.io/c99-raylib-cimgui-template/ $^ -o $@ $(EMSC_STATIC_LIBS_D)
