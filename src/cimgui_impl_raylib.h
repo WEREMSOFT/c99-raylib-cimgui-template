@@ -83,8 +83,6 @@ static void ImGui_ImplRaylib_UpdateMouseCursor()
 
 static void ImGui_ImplRaylib_UpdateMousePosAndButtons()
 {
-    static int oldTouchX = 0;
-    static int oldTouchY = 0;
     struct ImGuiIO* io = igGetIO();
 
     // Set OS mouse position if requested (rarely used, only when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
@@ -100,13 +98,11 @@ static void ImGui_ImplRaylib_UpdateMousePosAndButtons()
     if (!IsWindowMinimized()){
         io->MousePos = (ImVec2){GetTouchX(), GetTouchY()};
     }
-
-    oldTouchX = GetTouchX();
-    oldTouchY = GetTouchY();
 }
 
 void ImGui_ImplRaylib_NewFrame()
 {
+    rlDisableBackfaceCulling();
     struct ImGuiIO* io = igGetIO();
 
     io->DisplaySize = (ImVec2){(float) GetScreenWidth(), (float) GetScreenHeight()};
@@ -324,6 +320,7 @@ void raylib_render_cimgui(ImDrawData *draw_data)
         }
     }
     EndScissorMode();
+    rlEnableBackfaceCulling();
 }
 
 #endif

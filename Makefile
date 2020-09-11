@@ -25,6 +25,8 @@ LIBS_D := libs/
 HTML_D := docs/
 ASM_D := asm/
 
+SRC_FILES := $(wildcard $(SRC_D)*.c)
+
 INCLUDE_D := -I$(LIBS_D)include/
 STATIC_LIBS_D := -L$(LIBS_D)static/
 CFLAGS := -O0 -Wpedantic -g -Wall -std=c11 -g3 -D_FORTIFY_SOURCE=2 -DOS_$(DETTECTED_OS) 
@@ -59,9 +61,9 @@ endif
 # Build Targets
 #//////////////
 
-.PHONY: web test run_% debug_optimized debug_unoptimized print_information create_folder_structure run_html_u run_html_o run_performance_test init_project
+.PHONY: main all web test run_% debug_optimized debug_unoptimized print_information create_folder_structure run_html_u run_html_o run_performance_test init_project
 
-all: print_information $(BLD_D)main.$(BIN_EXTENSION)
+all: print_information main web
 
 $(OBJ_D)%.o: $(SRC_D)%.c
 	$(CC_COMMAND) -o $(OBJ_D)$@ $^ $(LINK_LIBS)
@@ -82,7 +84,7 @@ web: $(HTML_D)main.html
 	mv $(HTML_D)main.html $(HTML_D)index.html
 
 $(HTML_D)%.html: $(SRC_D)%.c
-	$(EMSC_CC_COMMAND) -o $@ $^ $(EMSC_STATIC_LIBS_D)
+	$(EMSC_CC_COMMAND) -g4 --source-map-base https://weremsoft.github.io/c99-raylib-cimgui-template/ $^ -o $@ $(EMSC_STATIC_LIBS_D)
 
 print_information:
 	@echo "Dettected OS: $(DETTECTED_OS)"
@@ -105,6 +107,9 @@ clean:
 	rm -rf $(OBJ_D)*
 	rm -rf $(TEST_BLD_D)*
 	rm -rf $(ASM_D)*
+
+main: $(SRC_FILES)
+	$(CC_COMMAND) -o $(BLD_D)$@.bin $^ $(LINK_LIBS)
 
 run_perf_%.$(BIN_EXTENSION): $(BLD_D)%.$(BIN_EXTENSION)
 	perf stat -e task-clock,cycles,instructions,cache-references,cache-misses $^
